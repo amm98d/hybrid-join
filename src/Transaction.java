@@ -21,5 +21,5 @@ public class Transaction {
 		T_DATE = t_DATE;
 		QUANTITY = qUANTITY;
 	}
-
+	
 }
