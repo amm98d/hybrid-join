@@ -9,6 +9,11 @@ public class Transaction {
 	String STORE_NAME;
 	Date T_DATE;
 	Integer QUANTITY;
+	// join attributes
+	String PRODUCT_NAME;
+	String SUPPLIER_ID;
+	String SUPPLIER_NAME;
+	Float TOTAL_SALE;
 
 	public Transaction(String tRANSACTION_ID, String pRODUCT_ID, String cUSTOMER_ID, String cUSTOMER_NAME,
 			String sTORE_ID, String sTORE_NAME, Date t_DATE, Integer qUANTITY) {
@@ -22,4 +27,11 @@ public class Transaction {
 		QUANTITY = qUANTITY;
 	}
 	
+	public void addAttributes(MasterData masterData) {
+		this.PRODUCT_NAME = masterData.PRODUCT_NAME;
+		this.SUPPLIER_ID = masterData.SUPPLIER_ID;
+		this.SUPPLIER_NAME = masterData.SUPPLIER_NAME;
+		this.TOTAL_SALE = this.QUANTITY * masterData.PRICE;
+	}
+
 }
