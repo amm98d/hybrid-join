@@ -15,6 +15,15 @@ public class Transaction {
 	String SUPPLIER_NAME;
 	Float TOTAL_SALE;
 
+	@Override
+	public String toString() {
+		return "Transaction [TRANSACTION_ID=" + TRANSACTION_ID + ", PRODUCT_ID=" + PRODUCT_ID + ", CUSTOMER_ID="
+				+ CUSTOMER_ID + ", CUSTOMER_NAME=" + CUSTOMER_NAME + ", STORE_ID=" + STORE_ID + ", STORE_NAME="
+				+ STORE_NAME + ", T_DATE=" + T_DATE + ", QUANTITY=" + QUANTITY + ", PRODUCT_NAME=" + PRODUCT_NAME
+				+ ", SUPPLIER_ID=" + SUPPLIER_ID + ", SUPPLIER_NAME=" + SUPPLIER_NAME + ", TOTAL_SALE=" + TOTAL_SALE
+				+ "]";
+	}
+
 	public Transaction(String tRANSACTION_ID, String pRODUCT_ID, String cUSTOMER_ID, String cUSTOMER_NAME,
 			String sTORE_ID, String sTORE_NAME, Date t_DATE, Integer qUANTITY) {
 		TRANSACTION_ID = tRANSACTION_ID;

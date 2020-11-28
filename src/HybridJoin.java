@@ -7,20 +7,21 @@ public class HybridJoin {
 		ArrayList<Transaction> streamBuffer;
 		ArrayList<MasterData> diskBuffer;
 		while (true) {
-			hashTableQueue.sizes();
 			// base-condition
 			if (dbHandler.endOfTransactions() && hashTableQueue.isEmpty()) {
 				break;
 			}
-			// Step-1
+			// Step-1: Data Extraction
 			streamBuffer = dbHandler.getTransactions(hashTableQueue.getCapacity());
 			hashTableQueue.addTransactions(streamBuffer);
-			// Step-2
+			// Step-2: Data Transformation
 			diskBuffer = dbHandler.getMasterData(hashTableQueue.getOldestEntry());
 			for (MasterData masterDataTuple : diskBuffer) {
 				ArrayList<HashTableQueue.Value> joined = hashTableQueue.join(masterDataTuple.PRODUCT_ID);
 				for (HashTableQueue.Value tuple : joined) {
 					tuple.transaction.addAttributes(masterDataTuple);
+					// Step-3: Data Loading
+					dbHandler.shipToDW(tuple.transaction);					
 				}
 				hashTableQueue.discard(masterDataTuple.PRODUCT_ID);
 			}

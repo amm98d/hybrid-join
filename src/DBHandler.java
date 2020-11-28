@@ -1,8 +1,11 @@
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class DBHandler {
@@ -27,6 +30,17 @@ public class DBHandler {
 		this.masterDataStatement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		this.transactionsResultSet = transactionsStatement.executeQuery("SELECT * FROM metro_db.transactions;");
 		this.masterDataResultSet = masterDataStatement.executeQuery("SELECT * FROM metro_db.masterdata;");
+		this.loadDates();
+	}
+
+	private void loadDates() throws SQLException {
+		PreparedStatement stmt = this.conn.prepareStatement("INSERT IGNORE INTO metro_dw.time VALUES (?, ?)");
+		for (LocalDate date = LocalDate.parse("2016-01-01"); date
+				.isBefore(LocalDate.parse("2016-12-31")); date = date.plusDays(1)) {
+			stmt.setDate(1, Date.valueOf(date));
+			stmt.setString(2, date.getDayOfWeek().toString());
+			stmt.executeUpdate();
+		}
 	}
 
 	private int totalSize(ResultSet rs) throws SQLException {
@@ -82,6 +96,39 @@ public class DBHandler {
 
 	public boolean endOfTransactions() throws SQLException {
 		return this.transactionsResultSet.getRow() == this.totalSize(this.transactionsResultSet);
+	}
+
+	public void shipToDW(Transaction transaction) throws SQLException {
+		// PRODUCT
+		PreparedStatement stmt = this.conn.prepareStatement("INSERT IGNORE INTO metro_dw.product VALUES (?, ?)");
+		stmt.setString(1, transaction.PRODUCT_ID);
+		stmt.setString(2, transaction.PRODUCT_NAME);
+		stmt.executeUpdate();
+		// CUSTOMER
+		stmt = this.conn.prepareStatement("INSERT IGNORE INTO metro_dw.customer VALUES (?, ?)");
+		stmt.setString(1, transaction.CUSTOMER_ID);
+		stmt.setString(2, transaction.CUSTOMER_NAME);
+		stmt.executeUpdate();
+		// STORE
+		stmt = this.conn.prepareStatement("INSERT IGNORE INTO metro_dw.store VALUES (?, ?)");
+		stmt.setString(1, transaction.STORE_ID);
+		stmt.setString(2, transaction.STORE_NAME);
+		stmt.executeUpdate();
+		// SUPPLIER
+		stmt = this.conn.prepareStatement("INSERT IGNORE INTO metro_dw.supplier VALUES (?, ?)");
+		stmt.setString(1, transaction.SUPPLIER_ID);
+		stmt.setString(2, transaction.SUPPLIER_NAME);
+		stmt.executeUpdate();
+		// SALES
+		stmt = this.conn.prepareStatement("INSERT IGNORE INTO metro_dw.sales VALUES (?, ?, ?, ?, ?, ?, ?)");
+		stmt.setString(1, transaction.CUSTOMER_ID);
+		stmt.setString(2, transaction.STORE_ID);
+		stmt.setString(3, transaction.PRODUCT_ID);
+		stmt.setString(4, transaction.SUPPLIER_ID);
+		stmt.setDate(5, transaction.T_DATE);
+		stmt.setInt(6, transaction.QUANTITY);
+		stmt.setFloat(7, transaction.TOTAL_SALE);
+		stmt.executeUpdate();
 	}
 
 	public void close() throws SQLException {
