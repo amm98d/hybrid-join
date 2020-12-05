@@ -1,5 +1,4 @@
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +17,7 @@ public class DBHandler {
 	private Statement masterDataStatement;
 	private ResultSet transactionsResultSet;
 	private ResultSet masterDataResultSet;
+	private Statement timeIDStatement;
 
 	public DBHandler() throws SQLException {
 		this.url = "jdbc:mysql://localhost:3306/metro_db";
@@ -30,15 +30,38 @@ public class DBHandler {
 		this.masterDataStatement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		this.transactionsResultSet = transactionsStatement.executeQuery("SELECT * FROM metro_db.transactions;");
 		this.masterDataResultSet = masterDataStatement.executeQuery("SELECT * FROM metro_db.masterdata;");
+		this.timeIDStatement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		this.loadDates();
 	}
 
 	private void loadDates() throws SQLException {
-		PreparedStatement stmt = this.conn.prepareStatement("INSERT IGNORE INTO metro_dw.time VALUES (?, ?)");
+		PreparedStatement stmt = this.conn
+				.prepareStatement("INSERT IGNORE INTO metro_dw.time VALUES (?, ?, ?, ?, ?, ?)");
+		int time_id = 1;
+		int quarter = -1;
 		for (LocalDate date = LocalDate.parse("2016-01-01"); date
-				.isBefore(LocalDate.parse("2016-12-31")); date = date.plusDays(1)) {
-			stmt.setDate(1, Date.valueOf(date));
-			stmt.setString(2, date.getDayOfWeek().toString());
+				.isBefore(LocalDate.parse("2017-01-01")); date = date.plusDays(1)) {
+			// TIME_ID
+			stmt.setInt(1, time_id++);
+			// DAY_OF_MONTH
+			stmt.setInt(2, date.getDayOfMonth());
+			// DAY_OF_WEEK
+			stmt.setString(3, date.getDayOfWeek().toString());
+			// MONTH
+			stmt.setInt(4, date.getMonthValue());
+			// QUARTER
+			if (date.getMonthValue() >= 1 && date.getMonthValue() <= 3)
+				quarter = 1;
+			else if (date.getMonthValue() >= 4 && date.getMonthValue() <= 6)
+				quarter = 2;
+			else if (date.getMonthValue() >= 7 && date.getMonthValue() <= 9)
+				quarter = 3;
+			else if (date.getMonthValue() >= 10 && date.getMonthValue() <= 12)
+				quarter = 4;
+			stmt.setInt(5, quarter);
+			// YEAR
+			stmt.setInt(6, date.getYear());
+
 			stmt.executeUpdate();
 		}
 	}
@@ -119,13 +142,21 @@ public class DBHandler {
 		stmt.setString(1, transaction.SUPPLIER_ID);
 		stmt.setString(2, transaction.SUPPLIER_NAME);
 		stmt.executeUpdate();
+		// GETTING TIME_ID
+		LocalDate localDate = transaction.T_DATE.toLocalDate();
+		ResultSet time_rs = this.timeIDStatement
+				.executeQuery("SELECT time.TIME_ID FROM metro_dw.time where time.DAY_OF_MONTH = "
+						+ localDate.getDayOfMonth() + " and time.MONTH = " + localDate.getMonthValue()
+						+ " and time.YEAR = " + localDate.getYear() + ";");
+		time_rs.next();
+		int time_id = time_rs.getInt(1);
 		// SALES
 		stmt = this.conn.prepareStatement("INSERT IGNORE INTO metro_dw.sales VALUES (?, ?, ?, ?, ?, ?, ?)");
 		stmt.setString(1, transaction.CUSTOMER_ID);
 		stmt.setString(2, transaction.STORE_ID);
 		stmt.setString(3, transaction.PRODUCT_ID);
 		stmt.setString(4, transaction.SUPPLIER_ID);
-		stmt.setDate(5, transaction.T_DATE);
+		stmt.setInt(5, time_id);
 		stmt.setInt(6, transaction.QUANTITY);
 		stmt.setFloat(7, transaction.TOTAL_SALE);
 		stmt.executeUpdate();
