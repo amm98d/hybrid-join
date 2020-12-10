@@ -4,8 +4,7 @@ public class Main {
 
 	public static void main(String[] args) throws SQLException {
 		DBHandler dbHandler = new DBHandler();
-		HashTableQueue hashTableQueue = new HashTableQueue(1000);
-		HybridJoin.run(dbHandler, hashTableQueue);
+		HybridJoin.run(dbHandler);
 		dbHandler.close();
 	}
 

@@ -17,11 +17,10 @@ public class Transaction {
 
 	@Override
 	public String toString() {
-		return "Transaction [TRANSACTION_ID=" + TRANSACTION_ID + ", PRODUCT_ID=" + PRODUCT_ID + ", CUSTOMER_ID="
-				+ CUSTOMER_ID + ", CUSTOMER_NAME=" + CUSTOMER_NAME + ", STORE_ID=" + STORE_ID + ", STORE_NAME="
-				+ STORE_NAME + ", T_DATE=" + T_DATE + ", QUANTITY=" + QUANTITY + ", PRODUCT_NAME=" + PRODUCT_NAME
-				+ ", SUPPLIER_ID=" + SUPPLIER_ID + ", SUPPLIER_NAME=" + SUPPLIER_NAME + ", TOTAL_SALE=" + TOTAL_SALE
-				+ "]";
+		return "TRANSACTION_ID=" + TRANSACTION_ID + ", PRODUCT_ID=" + PRODUCT_ID + ", CUSTOMER_ID=" + CUSTOMER_ID
+				+ ", CUSTOMER_NAME=" + CUSTOMER_NAME + ", STORE_ID=" + STORE_ID + ", STORE_NAME=" + STORE_NAME
+				+ ", T_DATE=" + T_DATE + ", QUANTITY=" + QUANTITY + ", PRODUCT_NAME=" + PRODUCT_NAME + ", SUPPLIER_ID="
+				+ SUPPLIER_ID + ", SUPPLIER_NAME=" + SUPPLIER_NAME + ", TOTAL_SALE=" + TOTAL_SALE;
 	}
 
 	public Transaction(String tRANSACTION_ID, String pRODUCT_ID, String cUSTOMER_ID, String cUSTOMER_NAME,
@@ -35,7 +34,7 @@ public class Transaction {
 		T_DATE = t_DATE;
 		QUANTITY = qUANTITY;
 	}
-	
+
 	public void addAttributes(MasterData masterData) {
 		this.PRODUCT_NAME = masterData.PRODUCT_NAME;
 		this.SUPPLIER_ID = masterData.SUPPLIER_ID;

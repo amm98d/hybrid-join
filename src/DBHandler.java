@@ -151,14 +151,15 @@ public class DBHandler {
 		time_rs.next();
 		int time_id = time_rs.getInt(1);
 		// SALES
-		stmt = this.conn.prepareStatement("INSERT IGNORE INTO metro_dw.sales VALUES (?, ?, ?, ?, ?, ?, ?)");
-		stmt.setString(1, transaction.CUSTOMER_ID);
-		stmt.setString(2, transaction.STORE_ID);
-		stmt.setString(3, transaction.PRODUCT_ID);
-		stmt.setString(4, transaction.SUPPLIER_ID);
-		stmt.setInt(5, time_id);
-		stmt.setInt(6, transaction.QUANTITY);
-		stmt.setFloat(7, transaction.TOTAL_SALE);
+		stmt = this.conn.prepareStatement("INSERT IGNORE INTO metro_dw.sales VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+		stmt.setString(1, transaction.TRANSACTION_ID);
+		stmt.setString(2, transaction.CUSTOMER_ID);
+		stmt.setString(3, transaction.STORE_ID);
+		stmt.setString(4, transaction.PRODUCT_ID);
+		stmt.setString(5, transaction.SUPPLIER_ID);
+		stmt.setInt(6, time_id);
+		stmt.setInt(7, transaction.QUANTITY);
+		stmt.setFloat(8, transaction.TOTAL_SALE);
 		stmt.executeUpdate();
 	}
 

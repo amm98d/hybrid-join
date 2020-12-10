@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/commons-collections4-4.4/commons-collections4-4.4.jar"/>
 	<classpathentry kind="lib" path="lib/Connector J 8.0/mysql-connector-java-8.0.22.jar"/>
+	<classpathentry kind="lib" path="D:/Academic + Work/Daz Daz/Assignments &amp; Tasks/DWH/Project/setups/j-text-utils-0.3.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
