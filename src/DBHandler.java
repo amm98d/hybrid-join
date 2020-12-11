@@ -22,7 +22,7 @@ public class DBHandler {
 	public DBHandler() throws SQLException {
 		this.url = "jdbc:mysql://localhost:3306/metro_db";
 		this.username = "root";
-		this.password = "1234";
+		this.password = "root";
 		this.conn = DriverManager.getConnection(url, username, password);
 		this.transactionsRead = 1;
 		this.transactionsStatement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
