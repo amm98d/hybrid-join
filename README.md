@@ -6,7 +6,7 @@ This repository is a Java Implementation of the Hybrid Join Algorithm for ETL Pr
 
 Follow the following steps to run this project:
 
-- Download and install the following using the setups inside this link:
+- Download and install the following using the setups inside this link: https://drive.google.com/drive/folders/1F3W5vyRhO8kswxIBFVxjahgjk4Hw3W3T?usp=sharing
   - MySQL Community (version 8)
   - MySQL Workbench
   - JDK 8
@@ -16,6 +16,7 @@ Follow the following steps to run this project:
 - Run the SQL script 'mysql-stuff/Transaction_and_MasterData_Generator.sql' in your MySQL Workbench.
 - Run the SQL script 'mysql-stuff/createDW.sql' in your MySQL Workbench.
 - Import this Java Project inside your Java Eclipse. For help on how to do this, please follow: https://www.360logica.com/blog/how-to-import-a-java-project-into-eclipse-ide/
+- The Jars necessary to run this project can also be found inside the setups link provided above. Include the jars into your Eclipse Project.
 - Run the file src/Main.java inside the Eclipse Project.
 - The analysis queries can be found inside 'mysql-stuff/analysis queries/'. Run them inside your MySQL Workbench to view results.
 
